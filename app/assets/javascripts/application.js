@@ -11,6 +11,15 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery-ui
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
+
+$(document).ready(function() {
+    $('#call_created_at').datepicker({
+        changeMonth: true,
+        changeYear: true,
+        yearRange: '-70:-18'
+    });
+  });

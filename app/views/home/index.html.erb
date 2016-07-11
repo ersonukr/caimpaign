@@ -15,3 +15,10 @@
   </tbody>
 </table>
 
+<%= paginate @calls %>
+
+<%= form_for :call, url: download_today_calls_path do |f| %>
+  <%= f.date_field :created_at, as: :datepicker, required: false,
+    :placeholder => 'Select date' %>
+  <%= f.submit %>
+<% end %>

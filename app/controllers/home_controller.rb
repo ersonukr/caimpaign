@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   def index
-    @calls = Call.all
+    @calls = Call.all.page(params[:page]).per(10)
   end
   
   def api
@@ -20,5 +20,21 @@ class HomeController < ApplicationController
       end
     end
     render :plain => 'success', :status => 200
+  end
+
+  def download_today_calls
+    date = params[:call][:created_at]
+    date = Date.parse date
+    date = date.strftime("%Y-%e-%m")
+    @calls = Call.where("created_at >= ?", date)
+    csv = CSV.generate( encoding: 'Windows-1251' ) do |csv|
+      # add headers
+      csv << ["call_sid","phone","status","Created At"]
+      # add data
+      @calls.each do |call|
+        csv << [call.call_sid, call.phone,call.status,call.created_at]
+      end
+    end
+    send_data csv
   end
 end
