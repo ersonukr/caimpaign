@@ -1,7 +1,8 @@
 class HomeController < ApplicationController
   def index
-    
+    @calls = Call.all
   end
+  
   def api
     call_sid = params[:CallSid]
     phone_number = params[:From].last(10)

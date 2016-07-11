@@ -1,1 +1,17 @@
-<%= "campaigns" %>
+<table border="1" align="center">
+  <thead>
+    <tr>
+      <th>Phone</th>
+      <th>Response</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @calls.each do |call|  %>
+    <tr>
+      <td><%= call.phone %></td>
+      <td><%= call.response %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
