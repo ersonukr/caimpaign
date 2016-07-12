@@ -17,9 +17,30 @@
 //= require_tree .
 
 $(document).ready(function() {
-    $('#call_created_at').datepicker({
-        changeMonth: true,
-        changeYear: true,
-        yearRange: '-70:-18'
-    });
+  $('#call_created_at').datepicker({
+      changeMonth: true,
+      changeYear: true,
+      yearRange: '2016:2026',
+      dateFormat: 'yy-mm-dd'
   });
+  $("#download_calls_form").submit(function(event) {
+  		var date = $('#call_created_at').val();
+      if (date === '') {
+      	alert('Please enter date')
+        event.preventDefault();
+      }
+  });
+});
+
+$(document).ready(function() {
+  $(".status-button").on("click", function(){
+    var that = this;
+    var call_sid = $(this).closest("tr").find(".call_sid").val();
+    $.post(('update_open_calls'), {call_sid:call_sid}, function(response){
+      if (response) {
+        var sid = ('#' + call_sid);
+        $(sid).closest("tr").hide();
+      }
+    });
+  });  
+});

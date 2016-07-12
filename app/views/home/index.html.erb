@@ -1,24 +1,37 @@
-<table border="1" align="center">
-  <thead>
-    <tr>
-      <th>Phone</th>
-      <th>Response</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @calls.each do |call|  %>
-    <tr>
-      <td><%= call.phone %></td>
-      <td><%= call.response %></td>
-    </tr>
+<div class="caimpaign-back-ground"> 
+  <div>
+    <table border="1" align="center">
+      <thead>
+        <tr>
+          <th>Phone</th>
+          <th>Response</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @calls.each do |call|  %>
+        <tr>
+          <td class="caimpaign-phone"><%= call.phone %></td>
+          <td><%= call.response %></td>
+          <td>
+            <div class="status-button">
+              <%= hidden_field_tag call.call_sid, call.call_sid, class: 'call_sid' %>
+              <%= "Done" %>
+            </div>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="caimpaign-pagination">
+    <%= paginate @calls %>
+  </div>
+  <div class="caimpaign-download"> 
+    <%= form_for :call, url: download_today_calls_path, :html => {id: 'download_calls_form'} do |f| %>
+      <%= f.date_field :created_at, as: :datepicker, required: false,
+        :placeholder => 'Select date' %>
+      <%= f.submit 'Download Caimpaign', :class => 'download-button' %>
     <% end %>
-  </tbody>
-</table>
-
-<%= paginate @calls %>
-
-<%= form_for :call, url: download_today_calls_path do |f| %>
-  <%= f.date_field :created_at, as: :datepicker, required: false,
-    :placeholder => 'Select date' %>
-  <%= f.submit %>
-<% end %>
+  </div>
+</div>

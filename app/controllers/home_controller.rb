@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   def index
-    @calls = Call.all.page(params[:page]).per(10)
+    @calls = Call.closed_call.page(params[:page]).per(12)
   end
   
   def api
@@ -24,17 +24,27 @@ class HomeController < ApplicationController
 
   def download_today_calls
     date = params[:call][:created_at]
-    date = Date.parse date
-    date = date.strftime("%Y-%e-%m")
-    @calls = Call.where("created_at >= ?", date)
-    csv = CSV.generate( encoding: 'Windows-1251' ) do |csv|
-      # add headers
-      csv << ["call_sid","phone","status","Created At"]
-      # add data
-      @calls.each do |call|
-        csv << [call.call_sid, call.phone,call.status,call.created_at]
+    if date.present?
+      date = Date.parse date
+      @calls = Call.where(:created_at => (date.beginning_of_day..date.end_of_day))
+      if @calls.present?
+        csv = CSV.generate( encoding: 'Windows-1251' ) do |csv|
+          # add headers
+          csv << ["call_sid","phone","status","Created At"]
+          # add data
+          @calls.each do |call|
+            csv << [call.call_sid, call.phone,call.status,call.created_at]
+          end
+        end
+        send_data csv
       end
     end
-    send_data csv
+  end
+  def update_open_calls
+    call_sid = params[:call_sid]
+    if call_sid.present?
+      call = Call.find_by_call_sid(call_sid)
+      call.update(closed: true) if call.present?     
+    end
   end
 end
